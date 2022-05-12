@@ -1,7 +1,10 @@
 import json
 import textwrap
 
+from unittest import mock
 import pytest
+
+from .mock_env import mocked_xray_server_request, XRAY_VARS
 
 
 @pytest.fixture()
@@ -74,13 +77,15 @@ def test_help_message(xray_tests):
     ids=['DC Server', 'Cloud client secret', 'Could token', 'Could api key']
 )
 def test_jira_xray_plugin(xray_tests, cli_options):
-    result = xray_tests.runpytest(*cli_options)
-    result.assert_outcomes(passed=1)
-    result.stdout.fnmatch_lines([
-        '*Uploaded results to JIRA XRAY. Test Execution Id: 1000*',
-    ])
-    assert result.ret == 0
-    assert not result.errlines
+    with mock.patch.dict("os.environ", XRAY_VARS):
+        with mock.patch("requests.request", side_effect=mocked_xray_server_request):
+            result = xray_tests.runpytest(*cli_options)
+            result.assert_outcomes(passed=1)
+            result.stdout.fnmatch_lines([
+                '*Uploaded results to JIRA XRAY. Test Execution Id: 1000*',
+            ])
+            assert result.ret == 0
+            assert not result.errlines
 
 
 def test_jira_xray_plugin_exports_to_file(xray_tests):

@@ -51,6 +51,10 @@ STATUS_STR_MAPPER_JIRA = {x: x.value for x in Status}
 
 
 class TestCase:
+    # Prevent pytest from trying to collect this class as tests
+    # Disable warning: PytestCollectionWarning: cannot collect test class...
+    __test__ = False
+
     def __init__(
         self,
         test_key: str,
@@ -98,6 +102,9 @@ class TestCase:
 
 
 class TestExecution:
+    # Prevent pytest from trying to collect this class as tests
+    # Disable warning: PytestCollectionWarning: cannot collect test class...
+    __test__ = False
 
     def __init__(
         self,
