@@ -10,4 +10,4 @@ requires = [
 [tool.black]
 line-length = 120
 skip-string-normalization = true
-target-version = ['py37']
+target-version = ['py39']
